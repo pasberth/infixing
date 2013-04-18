@@ -21,9 +21,25 @@
   (testing "(a + b * c + d) == (+ (+ a (* b c)) d)"
     (is (= (infixing (rules add-rule mul-rule) '(a + b * c + d)) '(+ (+ a (* b c)) d)))))
 
+(deftest mul-add-add-rule-test
+  (testing "(a * b + c + d) == (+ (+ (* a b) c) d)"
+    (is (= (infixing (rules add-rule mul-rule) '(a * b + c + d)) '(+ (+ (* a b) c) d)))))
+
+(deftest add-add-mul-rule-test
+  (testing "(a + b + c * d) == (+ (+ a b) (* c d))"
+    (is (= (infixing (rules add-rule mul-rule) '(a + b + c * d)) '(+ (+ a b) (* c d))))))
+
 (deftest mul-add-mul-rule-test
   (testing "(a * b + c * d) == (+ (* a b) (* c d))"
     (is (= (infixing (rules add-rule mul-rule) '(a * b + c * d)) '(+ (* a b) (* c d))))))
+
+(deftest add-mul-mul-rule-test
+  (testing "(a + b * c * d) == (+ a (* (* b c) d))"
+    (is (= (infixing (rules add-rule mul-rule) '(a + b * c * d)) '(+ a (* (* b c) d))))))
+
+(deftest mul-mul-add-rule-test
+  (testing "(a * b * c + d) == (+ (* (* a b) c) d)"
+    (is (= (infixing (rules add-rule mul-rule) '(a * b * c + d)) '(+ (* (* a b) c) d)))))
 
 (deftest and-rule-test1
   (testing "(x and y) == (and x y)"
