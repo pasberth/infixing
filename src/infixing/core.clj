@@ -27,7 +27,7 @@
              :else               (let [ [right code] (infixing-infix rules (rules curr) code) ] (cond
                (empty? code)       `(~(infixing-recur rules curr) ~left ~(infixing-recur rules right))
                :else               (infixing-entry rules `((~(infixing-recur rules curr) ~left ~(infixing-recur rules right)) ~@code)))))) ]
-  (infixing-entry rules `(~(infixing-recur rules left) ~curr ~@code))))
+    (infixing-entry rules `(~(infixing-recur rules left) ~curr ~@code))))
 
 (defn infix [priority symbol & symbols]
   (let [symbols (cons symbol symbols)]
