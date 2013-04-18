@@ -1,3 +1,5 @@
+(ns infixing.core)
+
 (defn infixing-infix [rules infix-rule [a b & code]] (cond
   (nil? b)         `(~a)
   (nil? (rules b)) (cond

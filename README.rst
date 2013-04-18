@@ -10,7 +10,8 @@ Examples
 
 .. code:: clojure
 
-  (require 'infixing)
+  (use 'infixing.core)
+  (use 'infixing.control.prelude)
   (defmacro try-infixing [code]
     (infixing (rules $-rule where-rule ->-rule) code))
   (try-infixing (println $ + 1 1))                           ; => 2
