@@ -10,7 +10,7 @@
 (def $-rule     (infixr 0 '$))
 (def where-rule (infix -1 'where))
 (def ->-rule    (infixl 1 '->))
-(def eq-rule    (infix 4 '=))
+(def eq-rule    (infix 4  '=))
 (def add-rule   (infixl 6 '+))
 (def sub-rule   (infixl 6 '-))
 (def mul-rule   (infixl 7 '*))
