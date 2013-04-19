@@ -10,7 +10,7 @@
                (< (b-rule :priority) (infix-rule :priority))  `(~a (~b ~@code))
                (> (b-rule :priority) (infix-rule :priority))  (infixing-infix rules infix-rule `((~b ~a) ~@code))
                (= :left (b-rule :recur) (infix-rule :recur))  `(~a (~b ~@code))
-               (= :right (b-rule :recur) (infix-rule :recur)) (infixing-infix rules infix-rule `((~b ~a) ~@code))
+               (= :right (b-rule :recur) (infix-rule :recur)) (infixing-infix rules infix-rule `((~b ~a) ~@(infixing-infix rules infix-rule code)))
                :else                                          'undefined))))
 
            (infixing-recur [rules code] (cond
