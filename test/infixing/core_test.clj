@@ -67,3 +67,11 @@
 (deftest and-or-and-rule-test
   (testing "(a and b or c and d) == (or (and a b) (and c d))"
     (is (= (infixing (rules or-rule and-rule) '(a and b or c and d)) '(or (and a b) (and c d))))))
+
+(deftest or-and-and-rule-test
+  (testing "(a or b and c and d) == (or a (and b (and c d)))"
+    (is (= (infixing (rules or-rule and-rule) '(a or b and c and d)) '(or a (and b (and c d)))))))
+
+(deftest and-and-or-rule-test
+  (testing "(a and b and c or d) == (or (and a (and b c)) d)"
+    (is (= (infixing (rules or-rule and-rule) '(a and b and c or d)) '(or (and a (and b c)) d)))))
