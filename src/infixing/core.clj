@@ -8,9 +8,14 @@
                :else    (infixing-infix rules infix-rule `((~a ~b) ~@code)))
              :else            (let [ b-rule (rules b) ] (cond
                (< (b-rule :priority) (infix-rule :priority))  `(~a (~b ~@code))
-               (> (b-rule :priority) (infix-rule :priority))  (infixing-infix rules infix-rule `((~b ~a) ~@code))
+               (> (b-rule :priority) (infix-rule :priority))  (cond
+                  (= :left  (b-rule :recur))                     (infixing-infix rules infix-rule `((~b ~a) ~@code))
+                  (= :right (b-rule :recur))                     (let [ [right code] (infixing-infix rules b-rule code) ]
+                    (infixing-infix rules infix-rule `((~b ~a ~right) ~@code)))
+                  :else                                          (infixing-infix rules infix-rule `((~b ~a) ~@code)))
                (= :left (b-rule :recur) (infix-rule :recur))  `(~a (~b ~@code))
-               (= :right (b-rule :recur) (infix-rule :recur)) (infixing-infix rules infix-rule `((~b ~a) ~@(infixing-infix rules infix-rule code)))
+               (= :right (b-rule :recur) (infix-rule :recur)) (let [ [right code] (infixing-infix rules b-rule code) ]
+                    (infixing-infix rules infix-rule `((~b ~a ~right) ~@code)))
                :else                                          'undefined))))
 
            (infixing-recur [rules code] (cond
