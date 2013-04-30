@@ -2,8 +2,8 @@
 
 (defn infixing [rules code]
   (let   [ nodes  #(map second (partition 2 %))
-           ret    #(reduce (fn [a b] `(~@b ~a)) (map reverse %))
-           return #(ret (cons (concat %1 %2) (nodes %3)))
+           ret    #(reduce (fn [a b] `(~@b ~a)) %)
+           return #(ret (cons (concat %2 %1) (nodes %3)))
          ]
   (loop [ [ left-rule left-node & stack ] '()
           code  code
@@ -18,12 +18,12 @@
              l-pr              (and left-rule (left-rule :priority))
              l-rc              (and left-rule (left-rule :recur))
            ] (cond
-        (nil? op-rule)           (recur `(~left-rule ~(cons lft left-node) ~@stack) (cons op code))
-        (nil? left-rule)         (recur `(~op-rule (~lft ~@left-node ~op) ~@stack) code)
-        (< op-pr l-pr)           (recur stack `((~@(reverse left-node) ~lft) ~op ~@code))
+        (nil? op-rule)           (recur `(~left-rule (~@left-node ~lft) ~@stack) (cons op code))
+        (nil? left-rule)         (recur `(~op-rule (~op ~@left-node ~lft) ~@stack) code)
+        (< op-pr l-pr)           (recur stack `((~@left-node ~lft) ~op ~@code))
         (or (> op-pr l-pr)
-          (= :right op-rc l-rc)) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
-        (= :left  op-rc l-rc)    (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
+          (= :right op-rc l-rc)) (recur `(~op-rule (~op ~lft) ~left-rule ~left-node ~@stack) code)
+        (= :left  op-rc l-rc)    (recur `(~op-rule (~op (~@left-node ~lft)) ~@stack) code)
         :else                 'undefined))))))
 
 (defn infix [priority symbol]
