@@ -1,38 +1,33 @@
 (ns infixing.core)
 
-(defn infixing [rules [left curr & code]]
-  (letfn [ (infixing-infix [rules infix-rule [a b & code]] (cond
-             (nil? b)         `(~a)
-             (nil? (rules b)) (cond
-               (seq? a) (infixing-infix rules infix-rule `((~@a ~b) ~@code))
-               :else    (infixing-infix rules infix-rule `((~a ~b) ~@code)))
-             :else            (let [ b-rule (rules b) ] (cond
-               (< (b-rule :priority) (infix-rule :priority))  `(~a (~b ~@code))
-               (> (b-rule :priority) (infix-rule :priority))  (cond
-                  (= :left  (b-rule :recur))                     (infixing-infix rules infix-rule `((~b ~a) ~@code))
-                  (= :right (b-rule :recur))                     (let [ [right code] (infixing-infix rules b-rule code) ]
-                    (infixing-infix rules infix-rule `((~b ~a ~right) ~@code)))
-                  :else                                          (infixing-infix rules infix-rule `((~b ~a) ~@code)))
-               (= :left (b-rule :recur) (infix-rule :recur))  `(~a (~b ~@code))
-               (= :right (b-rule :recur) (infix-rule :recur)) (let [ [right code] (infixing-infix rules b-rule code) ]
-                    (infixing-infix rules infix-rule `((~b ~a ~right) ~@code)))
-               :else                                          'undefined))))
-
-           (infixing-recur [rules code] (cond
-             (seq? code) (let [[left curr & code] code] (cond
-             (seq? curr) (infixing rules `(~left ~(infixing-recur rules curr) ~@code))
-               :else       (infixing rules `(~left ~curr ~@code))))
-             :else       code))
-
-           (infixing-entry [rules [left curr & code]] (cond
-             (nil? curr)         left
-             (nil? (rules curr)) (cond
-               (seq? left) (infixing-entry rules `((~@left ~(infixing-recur rules curr)) ~@code))
-               :else       (infixing-entry rules `((~left ~(infixing-recur rules curr)) ~@code)))
-             :else               (let [ [right code] (infixing-infix rules (rules curr) code) ] (cond
-               (empty? code)       `(~(infixing-recur rules curr) ~left ~(infixing-recur rules right))
-               :else               (infixing-entry rules `((~(infixing-recur rules curr) ~left ~(infixing-recur rules right)) ~@code)))))) ]
-    (infixing-entry rules `(~(infixing-recur rules left) ~curr ~@code))))
+(defn infixing [rules code]
+  (loop [  stack      '()
+           code       code
+        ]
+    (let [ [ left-rule left-node & stack ] stack ]
+    (letfn [ (ret- [a]
+               (let [ nodes     (map second (partition 2 stack))
+                      last-node (concat a left-node)
+                    ]
+                 (println (cons last-node nodes))
+                 (reduce (fn [a b] `(~@b ~a)) (map reverse (cons last-node nodes)))))
+             (ret  [] (ret- code))
+             (ret1 [] (ret- `(~code)))
+           ] (cond
+      (not (seq? code))  (ret1)
+      (empty? code)      (ret)
+      (= 1 (count code)) (ret)
+      :else
+        (let [ [ lft op & code ] code
+               op-rule           (rules op)
+             ] (cond
+          (nil? op-rule)                                 (recur `(~left-rule (cons lft left-node) ~@stack) (cons op code))
+          (nil? left-rule)                               (recur `(~op-rule (~lft ~@left-node ~op) ~@stack) code)
+          (< (op-rule :priority) (left-rule :priority))  (recur stack `((~@(reverse left-node) ~lft) ~op ~@code))
+          (> (op-rule :priority) (left-rule :priority))  (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
+          (= :right (op-rule :recur) (left-rule :recur)) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
+          (= :left (op-rule :recur) (left-rule :recur))  (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
+          :else             'undefined)))))))
 
 (defn infix [priority symbol & symbols]
   (let [symbols (cons symbol symbols)]
