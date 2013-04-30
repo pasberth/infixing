@@ -1,8 +1,8 @@
 (ns infixing.core)
 
 (defn infixing [rules code]
-  (loop [  stack      '()
-           code       code
+  (loop [  stack '()
+           code  code
         ]
     (let [ [ left-rule left-node & stack ] stack ]
     (letfn [ (ret- [a]
@@ -26,7 +26,7 @@
           (> (op-rule :priority) (left-rule :priority))  (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
           (= :right (op-rule :recur) (left-rule :recur)) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
           (= :left (op-rule :recur) (left-rule :recur))  (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
-          :else             'undefined)))))))
+          :else                                          'undefined)))))))
 
 (defn infix [priority symbol & symbols]
   (let [symbols (cons symbol symbols)]
