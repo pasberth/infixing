@@ -9,7 +9,6 @@
                (let [ nodes     (map second (partition 2 stack))
                       last-node (concat a left-node)
                     ]
-                 (println (cons last-node nodes))
                  (reduce (fn [a b] `(~@b ~a)) (map reverse (cons last-node nodes)))))
              (ret  [] (ret- code))
              (ret1 [] (ret- `(~code)))
