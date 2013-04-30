@@ -7,8 +7,7 @@
          ]
   (loop [ [ left-rule left-node & stack ] '()
           code  code
-        ]
-  (cond
+        ] (cond
     (not (seq? code))  (return `(~code) left-node stack)
     (empty? code)      (return code left-node stack)
     (= 1 (count code)) (return code left-node stack)
