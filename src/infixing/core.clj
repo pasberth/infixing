@@ -24,7 +24,7 @@
         (or (> op-pr l-pr)
           (= :right op-rc l-rc)) (recur `(~op-rule (~op ~lft) ~left-rule ~left-node ~@stack) code)
         (= :left  op-rc l-rc)    (recur `(~op-rule (~op (~@left-node ~lft)) ~@stack) code)
-        :else                 'undefined))))))
+        :else                    'undefined))))))
 
 (defn infix [priority symbol]
   {symbol {:priority priority :recur nil}})
