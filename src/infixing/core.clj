@@ -9,8 +9,7 @@
           code  code
         ] (cond
     (not (seq? code))  (return `(~code) left-node stack)
-    (empty? code)      (return code left-node stack)
-    (= 1 (count code)) (return code left-node stack)
+    (> 2 (count code)) (return code left-node stack)
     :else
       (let [ [ lft op & code ] code
              op-rule           (rules op)
