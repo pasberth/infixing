@@ -28,17 +28,14 @@
           (= :left (op-rule :recur) (left-rule :recur))  (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
           :else                                          'undefined)))))))
 
-(defn infix [priority symbol & symbols]
-  (let [symbols (cons symbol symbols)]
-    (reduce merge (map (fn [s] {s {:priority priority :recur nil}}) symbols))))
+(defn infix [priority symbol]
+  {symbol {:priority priority :recur nil}})
 
-(defn infixl [priority symbol & symbols]
-  (let [symbols (cons symbol symbols)]
-    (reduce merge (map (fn [s] {s {:priority priority :recur :left}}) symbols))))
+(defn infixl [priority symbol]
+  {symbol {:priority priority :recur :left}})
 
 (defn infixr [priority symbol & symbols]
-  (let [symbols (cons symbol symbols)]
-    (reduce merge (map (fn [s] {s {:priority priority :recur :right}}) symbols))))
+  {symbol {:priority priority :recur :right}})
 
 (defn rules [& rules]
   (reduce merge rules))
