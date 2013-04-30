@@ -13,14 +13,18 @@
     :else
       (let [ [ lft op & code ] code
              op-rule           (rules op)
+             op-pr             (op-rule :priority)
+             op-rc             (op-rule :recur)
+             l-pr              (and left-rule (left-rule :priority))
+             l-rc              (and left-rule (left-rule :recur))
            ] (cond
-        (nil? op-rule)                                 (recur `(~left-rule ~(cons lft left-node) ~@stack) (cons op code))
-        (nil? left-rule)                               (recur `(~op-rule (~lft ~@left-node ~op) ~@stack) code)
-        (< (op-rule :priority) (left-rule :priority))  (recur stack `((~@(reverse left-node) ~lft) ~op ~@code))
-        (> (op-rule :priority) (left-rule :priority))  (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
-        (= :right (op-rule :recur) (left-rule :recur)) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
-        (= :left (op-rule :recur) (left-rule :recur))  (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
-        :else                                          'undefined))))))
+        (nil? op-rule)        (recur `(~left-rule ~(cons lft left-node) ~@stack) (cons op code))
+        (nil? left-rule)      (recur `(~op-rule (~lft ~@left-node ~op) ~@stack) code)
+        (< op-pr l-pr)        (recur stack `((~@(reverse left-node) ~lft) ~op ~@code))
+        (> op-pr l-pr)        (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
+        (= :right op-rc l-rc) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
+        (= :left  op-rc l-rc) (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
+        :else                 'undefined))))))
 
 (defn infix [priority symbol]
   {symbol {:priority priority :recur nil}})
