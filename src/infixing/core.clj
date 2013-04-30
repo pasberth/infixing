@@ -7,10 +7,9 @@
   (letfn [ (return [code [_ left-node & stack]]
              (ret (cons (concat code left-node) (nodes stack))))
          ]
-  (loop [ stack '()
+  (loop [ [ left-rule left-node & stack ] '()
           code  code
         ]
-  (let [ [ left-rule left-node & stack ] stack ]
   (cond
     (not (seq? code))  (return `(~code) `(~left-rule ~left-node ~@stack))
     (empty? code)      (return code `(~left-rule ~left-node ~@stack))
@@ -25,7 +24,7 @@
         (> (op-rule :priority) (left-rule :priority))  (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
         (= :right (op-rule :recur) (left-rule :recur)) (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
         (= :left (op-rule :recur) (left-rule :recur))  (recur `(~op-rule ((~@(reverse left-node) ~lft) ~op) ~@stack) code)
-        :else                                          'undefined))))))))
+        :else                                          'undefined)))))))
 
 (defn infix [priority symbol]
   {symbol {:priority priority :recur nil}})
