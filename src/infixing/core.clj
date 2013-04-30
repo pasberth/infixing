@@ -20,7 +20,7 @@
         (let [ [ lft op & code ] code
                op-rule           (rules op)
              ] (cond
-          (nil? op-rule)                                 (recur `(~left-rule (cons lft left-node) ~@stack) (cons op code))
+          (nil? op-rule)                                 (recur `(~left-rule ~(cons lft left-node) ~@stack) (cons op code))
           (nil? left-rule)                               (recur `(~op-rule (~lft ~@left-node ~op) ~@stack) code)
           (< (op-rule :priority) (left-rule :priority))  (recur stack `((~@(reverse left-node) ~lft) ~op ~@code))
           (> (op-rule :priority) (left-rule :priority))  (recur `(~op-rule (~lft ~op) ~left-rule ~left-node ~@stack) code)
