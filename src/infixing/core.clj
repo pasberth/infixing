@@ -32,7 +32,7 @@
 (defn infixl [priority symbol]
   {symbol {:priority priority :recur :left}})
 
-(defn infixr [priority symbol & symbols]
+(defn infixr [priority symbol]
   {symbol {:priority priority :recur :right}})
 
 (defn rules [& rules]
