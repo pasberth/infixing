@@ -11,7 +11,6 @@
 (def or-rule    (infixr 2 'or))
 (def $-rule     (infixr 0 '$))
 (def apply-rule (reify Rules
-  (infix-space? [this]   true)
   (space-rule   [this]   {:priority 10 :recur :left :repl (fn [[_ a b]] `(~a ~b))})
   (rule-map     [this s] (rule-map $-rule s))))
 

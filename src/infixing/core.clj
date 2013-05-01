@@ -1,12 +1,10 @@
 (ns infixing.core)
 
 (defprotocol Rules
-  (infix-space? [this])
   (space-rule   [this])
   (rule-map     [this s]))
 
 (defrecord MapRules [rules] Rules
-  (infix-space? [this] false)
   (space-rule   [this] nil)
   (rule-map     [this s] (rules s)))
 
@@ -35,7 +33,7 @@
              l-rc              (and left-rule (left-rule :recur))
            ] (cond
         (nil? op-rule)           (cond
-          (infix-space? rules)     (recur `(~left-rule ~left-node ~@stack) `(~lft ~spc-op ~op ~@code))
+          (space-rule rules)       (recur `(~left-rule ~left-node ~@stack) `(~lft ~spc-op ~op ~@code))
           :else                    (recur `(~left-rule (~@left-node ~lft) ~@stack) (cons op code)))
         (nil? left-rule)         (recur `(~op-rule (~op ~@left-node ~lft) ~@stack) code)
         (< op-pr l-pr)           (recur stack `(~((left-rule :repl) `(~@left-node ~lft)) ~op ~@code))
