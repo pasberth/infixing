@@ -6,12 +6,13 @@
   `(let ~b ~a))
 
 (defmacro try-infixing [code]
-  (infixing (rules (infixr 0 '$)
-                   (infix -1 'where)
-                   (infixl 1 '->))
+  (infixing (rules (infixr        0 '$)
+                   (infix        -1 'where)
+                   (infixl        1 '->)
+                   (infixl-space 10 (fn [f x] (if (seq? f) `(~@f ~x) `(~f ~x)))))
             code))
 
-(try-infixing (println $ (+ 1 1)))                                   ; => 2
+(try-infixing (println $ + 1 1))                                     ; => 2
 (try-infixing ((println x) where [x "hello world"]))                 ; => hello world
-(try-infixing (println $ (+ x x) where [x 1]))                       ; => 2
+(try-infixing (println $ + x x where [x 1]))                         ; => 2
 (try-infixing (println $ 1 -> f -> g where [f #(+ 2 %) g #(+ 3 %)])) ; => 6
