@@ -9,6 +9,11 @@
 (def div-rule   (infixl 7 '/))
 (def and-rule   (infixr 3 'and))
 (def or-rule    (infixr 2 'or))
+(def $-rule     (infixr 0 '$))
+(def apply-rule (reify Rules
+  (infix-space? [this]   true)
+  (space-rule   [this]   {:priority 10 :recur :left :repl (fn [[_ a b]] `(~a ~b))})
+  (rule-map     [this s] (rule-map $-rule s))))
 
 (deftest add-rule-test1
   (testing "(x + y) == (+ x y)"
@@ -75,3 +80,12 @@
 (deftest and-and-or-rule-test
   (testing "(a and b and c or d) == (or (and a (and b c)) d)"
     (is (= (infixing (rules or-rule and-rule) '(a and b and c or d)) '(or (and a (and b c)) d)))))
+
+(deftest space-rule-test
+  (testing "(a b $ x y) == ($ a b x y)"
+    (is (= (infixing $-rule '(a b $ x y)) '($ a b x y)))))
+
+(deftest apply-rule-test
+  (testing "(f a b $ g x y) == ($ ((f a) b) ((g x) y))"
+    (is (= (infixing apply-rule '(f a b $ g x y)) '($ ((f a) b) ((g x) y))))))
+
