@@ -11,7 +11,7 @@
   (node-map         [this s]))
 
 (defrecord MapRules [rules] Rules
-  (space-rule   [this] nil)
+  (space-rule   [this]   nil)
   (rule-map     [this s] (rules s)))
 
 (defrecord InfixRule [priority] Rule
@@ -38,7 +38,7 @@
            spc-op (fn [] true)
          ]
   (loop [ [ left-rule left-node & stack ] '()
-          code  code
+          code                            code
         ] (cond
     (not (seq? code))  (return `(~code) left-rule left-node stack)
     (> 2 (count code)) (return code left-rule left-node stack)
@@ -60,7 +60,7 @@
         (or (> op-pr l-pr)
           (and op-r? l-r?))  (recur `(~op-rule (~op ~lft) ~left-rule ~left-node ~@stack) code)
         (and op-l? l-l?)     (recur `(~op-rule (~op ~(node-map left-rule `(~@left-node ~lft))) ~@stack) code)
-        :else                    'undefined))))))
+        :else                'undefined))))))
 
 (defn infix [priority symbol]
   (MapRules. {symbol (InfixRule. priority)}))
