@@ -10,7 +10,7 @@
 (def and-rule   (infixr 3 'and))
 (def or-rule    (infixr 2 'or))
 (def $-rule     (infixr 0 '$))
-(def apply-rule (infixing.core.Rules. (infixing.core.Rule. 10 false true (fn [[_ a b]] `(~a ~b))) (:rule-map $-rule)))
+(def apply-rule (infixl-space 10 list))
 
 (deftest add-rule-test1
   (testing "(x + y) == (+ x y)"
@@ -84,5 +84,5 @@
 
 (deftest apply-rule-test
   (testing "(f a b $ g x y) == ($ ((f a) b) ((g x) y))"
-    (is (= (infixing apply-rule '(f a b $ g x y)) '($ ((f a) b) ((g x) y))))))
+    (is (= (infixing (rules apply-rule $-rule) '(f a b $ g x y)) '($ ((f a) b) ((g x) y))))))
 

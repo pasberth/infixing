@@ -42,5 +42,23 @@
 (defn infixr [priority symbol]
   (Rules. nil {symbol (Rule. priority true false identity)}))
 
+(defn infix-map [priority symbol node-map]
+  (Rules. nil {symbol (Rule. priority false false node-map)}))
+
+(defn infixl-map [priority symbol node-map]
+  (Rules. nil {symbol (Rule. priority false true node-map)}))
+
+(defn infixr-map [priority symbol node-map]
+  (Rules. nil {symbol (Rule. priority true false node-map)}))
+
+(defn infix-space [priority node-map]
+  (Rules. (Rule. priority false false (fn [[_ a b]] (node-map a b))) {}))
+
+(defn infixl-space [priority node-map]
+  (Rules. (Rule. priority false true (fn [[_ a b]] (node-map a b))) {}))
+
+(defn infixr-space [priority node-map]
+  (Rules. (Rule. priority true false (fn [[_ a b]] (node-map a b))) {}))
+
 (defn rules [& rules]
-  (Rules. nil (reduce merge (map :rule-map rules))))
+  (Rules. (reduce (fn [a b] (or a b)) (map :space-rule rules)) (reduce merge (map :rule-map rules))))
