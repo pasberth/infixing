@@ -11,7 +11,11 @@
 (def or-rule    (infixr 2 'or))
 (def $-rule     (infixr 0 '$))
 (def apply-rule (reify Rules
-  (space-rule   [this]   {:priority 10 :recur :left :repl (fn [[_ a b]] `(~a ~b))})
+  (space-rule   [this]   (reify Rule
+    (priority         [this]  10)
+    (left-recursion?  [this] true)
+    (right-recursion? [this] false)
+    (node-map         [this [_ a b]] `(~a ~b))))
   (rule-map     [this s] (rule-map $-rule s))))
 
 (deftest add-rule-test1
