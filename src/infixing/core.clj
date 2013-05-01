@@ -4,15 +4,15 @@
   (space-rule   [this])
   (rule-map     [this s]))
 
-(defrecord MapRules [rules] Rules
-  (space-rule   [this] nil)
-  (rule-map     [this s] (rules s)))
-
 (defprotocol Rule
   (priority         [this])
   (right-recursion? [this])
   (left-recursion?  [this])
   (node-map         [this s]))
+
+(defrecord MapRules [rules] Rules
+  (space-rule   [this] nil)
+  (rule-map     [this s] (rules s)))
 
 (defrecord InfixRule [priority] Rule
   (priority         [this]   priority)
