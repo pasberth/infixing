@@ -10,13 +10,7 @@
 (def and-rule   (infixr 3 'and))
 (def or-rule    (infixr 2 'or))
 (def $-rule     (infixr 0 '$))
-(def apply-rule (reify Rules
-  (space-rule   [this]   (reify Rule
-    (priority         [this]  10)
-    (left-recursion?  [this] true)
-    (right-recursion? [this] false)
-    (node-map         [this [_ a b]] `(~a ~b))))
-  (rule-map     [this s] (rule-map $-rule s))))
+(def apply-rule (infixing.core.Rules. (infixing.core.Rule. 10 false true (fn [[_ a b]] `(~a ~b))) (:rule-map $-rule)))
 
 (deftest add-rule-test1
   (testing "(x + y) == (+ x y)"
