@@ -6,13 +6,13 @@
 (defn infixing [rules code]
   (if (not (seq? code)) code
   (let   [ ret    #(reduce (fn [a [b-rule b]] ((:node-map b-rule) `(~@b ~a))) %)
-           return #(ret (cons ((if %2 (:node-map %2) identity) (concat %3 %1)) (partition 2 %4)))
+           return #(ret (cons ((:node-map %2) %1) (partition 2 %3)))
            spc-op (fn [] true)
          ]
   (loop [ [ left-rule left-node & stack ] '()
           code                            code
         ] (cond
-    (> 2 (count code)) (return code left-rule left-node stack)
+    (> 2 (count code)) (cond (nil? left-node) code :else (return (concat left-node code) left-rule stack))
     :else
       (let [ [ lft op & code ] code
              op-rule           (if (= spc-op op) (:space-rule rules) ((:rule-map rules) op))
