@@ -4,14 +4,14 @@
 (defrecord Rule  [priority right-recursion? left-recursion? node-map])
 
 (defn infixing [rules code]
+  (if (not (seq? code)) code
   (let   [ ret    #(reduce (fn [a [b-rule b]] ((:node-map b-rule) `(~@b ~a))) %)
-           return #(ret (cons ((:node-map %2) (concat %3 %1)) (partition 2 %4)))
+           return #(ret (cons ((if %2 (:node-map %2) identity) (concat %3 %1)) (partition 2 %4)))
            spc-op (fn [] true)
          ]
   (loop [ [ left-rule left-node & stack ] '()
           code                            code
         ] (cond
-    (not (seq? code))  (return `(~code) left-rule left-node stack)
     (> 2 (count code)) (return code left-rule left-node stack)
     :else
       (let [ [ lft op & code ] code
@@ -31,7 +31,7 @@
         (or (> op-pr l-pr)
           (and op-r? l-r?))  (recur `(~op-rule (~op ~lft) ~left-rule ~left-node ~@stack) code)
         (and op-l? l-l?)     (recur `(~op-rule (~op ~((:node-map left-rule) `(~@left-node ~lft))) ~@stack) code)
-        :else                'undefined))))))
+        :else                'undefined)))))))
 
 (defn infix [priority symbol]
   (Rules. nil {symbol (Rule. priority false false identity)}))

@@ -12,6 +12,14 @@
 (def $-rule     (infixr 0 '$))
 (def apply-rule (infixl-space 10 list))
 
+(deftest ret-literal1
+  (testing "x == x"
+    (is (= (infixing add-rule 'x) 'x))))
+
+(deftest ret-literal2
+  (testing "(x) == (x)"
+    (is (= (infixing add-rule '(x)) '(x)))))
+
 (deftest add-rule-test1
   (testing "(x + y) == (+ x y)"
     (is (= (infixing add-rule '(x + y)) '(+ x y)))))
