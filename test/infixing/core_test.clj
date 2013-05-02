@@ -62,6 +62,10 @@
   (testing "(a = b and c = d) == (and (= a b) (= c d))"
     (is (= (infixing (rules eq-rule and-rule) '(a = b and c = d)) '(and (= a b) (= c d))))))
 
+(deftest eq-eq-rule-test
+  (testing "(a = b = c) == IllegalArgumentException"
+    (is (thrown? IllegalArgumentException (infixing eq-rule '(a = b = c))))))
+
 (deftest or-and-or-rule-test
   (testing "(a or b and c or d) == (or a (or (and b c) d))"
     (is (= (infixing (rules or-rule and-rule) '(a or b and c or d)) '(or a (or (and b c) d))))))

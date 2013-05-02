@@ -31,7 +31,7 @@
         (or (> op-pr l-pr)
           (and op-r? l-r?))  (recur `(~op-rule (~op ~lft) ~left-rule ~left-node ~@stack) code)
         (and op-l? l-l?)     (recur `(~op-rule (~op ~((:node-map left-rule) `(~@left-node ~lft))) ~@stack) code)
-        :else                'undefined)))))))
+        :else                (throw (IllegalArgumentException.)))))))))
 
 (defn infix [priority symbol]
   (Rules. nil {symbol (Rule. priority false false identity)}))
