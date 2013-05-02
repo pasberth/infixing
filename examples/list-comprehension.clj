@@ -1,8 +1,8 @@
 (use 'infixing.core)
 
-(def <-rule (infix-map 9 :< (fn [[_ v l]]
+(def <-rule (infix-map 9 :< (fn [v l]
                                 (fn [f] (f v l)))))
-(def when-rule (infixl-map 5 :when (fn [[_ w x]]
+(def when-rule (infixl-map 5 :when (fn [w x]
                                  (w (fn [v l]
                                    (let [l `(filter (fn [~v] ~x) ~l)]
                                      (fn [f] (f v l))))))))
