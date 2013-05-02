@@ -91,7 +91,7 @@
     (is (= (infixing (rules or-rule and-rule) '(a and b and c or d)) '(or (and a (and b c)) d)))))
 
 (deftest space-rule-test
-  (testing "(a b $ x y) == ($ a b x y)"
+  (testing "(a b $ x y) == IllegalArgumentException"
     (is (thrown? IllegalArgumentException (infixing $-rule '(a b $ x y)) '($ a b x y)))))
 
 (deftest apply-rule-test
