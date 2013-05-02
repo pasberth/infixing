@@ -24,8 +24,8 @@
              l-l?              (and left-rule (:left-recursion? left-rule))
            ] (cond
         (nil? op-rule)       (cond
-          (:space-rule rules) (recur `(~left-rule ~left-node ~@stack) `(~lft ~spc-op ~op ~@code))
-          :else              (recur `(~left-rule (~@left-node ~lft) ~@stack) (cons op code)))
+          (:space-rule rules)  (recur `(~left-rule ~left-node ~@stack) `(~lft ~spc-op ~op ~@code))
+          :else                (throw (IllegalArgumentException.)))
         (nil? left-rule)     (recur `(~op-rule (~op ~@left-node ~lft) ~@stack) code)
         (< op-pr l-pr)       (recur stack `(~((:node-map left-rule) `(~@left-node ~lft)) ~op ~@code))
         (or (> op-pr l-pr)

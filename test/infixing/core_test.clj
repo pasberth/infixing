@@ -88,7 +88,7 @@
 
 (deftest space-rule-test
   (testing "(a b $ x y) == ($ a b x y)"
-    (is (= (infixing $-rule '(a b $ x y)) '($ a b x y)))))
+    (is (thrown? IllegalArgumentException (infixing $-rule '(a b $ x y)) '($ a b x y)))))
 
 (deftest apply-rule-test
   (testing "(f a b $ g x y) == ($ ((f a) b) ((g x) y))"
