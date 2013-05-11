@@ -6,7 +6,6 @@ Introduction
 
 This library provides a easy way to defining many macros of infix-operator based syntax.
 If you want a syntax sugar on Clojure, influenced from other languages, you can use the library as a selecting.
-Maybe, this is usablitity for.
 
 
 Examples
