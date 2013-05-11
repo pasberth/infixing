@@ -1,4 +1,4 @@
-(defproject infixing "0.1.0-SNAPSHOT"
+(defproject infixing "0.1.0"
   :description "Infixing"
   :url "https://github.com/pasberth/infixing"
   ; :license {}
