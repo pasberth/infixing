@@ -29,27 +29,27 @@
 
 (deftest add-mul-add-rule-test
   (testing "(a + b * c + d) == (+ (+ a (* b c)) d)"
-    (is (= (infixing (rules add-rule mul-rule) '(a + b * c + d)) '(+ (+ a (* b c)) d)))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a + b * c + d)) '(+ (+ a (* b c)) d)))))
 
 (deftest mul-add-add-rule-test
   (testing "(a * b + c + d) == (+ (+ (* a b) c) d)"
-    (is (= (infixing (rules add-rule mul-rule) '(a * b + c + d)) '(+ (+ (* a b) c) d)))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a * b + c + d)) '(+ (+ (* a b) c) d)))))
 
 (deftest add-add-mul-rule-test
   (testing "(a + b + c * d) == (+ (+ a b) (* c d))"
-    (is (= (infixing (rules add-rule mul-rule) '(a + b + c * d)) '(+ (+ a b) (* c d))))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a + b + c * d)) '(+ (+ a b) (* c d))))))
 
 (deftest mul-add-mul-rule-test
   (testing "(a * b + c * d) == (+ (* a b) (* c d))"
-    (is (= (infixing (rules add-rule mul-rule) '(a * b + c * d)) '(+ (* a b) (* c d))))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a * b + c * d)) '(+ (* a b) (* c d))))))
 
 (deftest add-mul-mul-rule-test
   (testing "(a + b * c * d) == (+ a (* (* b c) d))"
-    (is (= (infixing (rules add-rule mul-rule) '(a + b * c * d)) '(+ a (* (* b c) d))))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a + b * c * d)) '(+ a (* (* b c) d))))))
 
 (deftest mul-mul-add-rule-test
   (testing "(a * b * c + d) == (+ (* (* a b) c) d)"
-    (is (= (infixing (rules add-rule mul-rule) '(a * b * c + d)) '(+ (* (* a b) c) d)))))
+    (is (= (infixing (merge-rule add-rule mul-rule) '(a * b * c + d)) '(+ (* (* a b) c) d)))))
 
 (deftest and-rule-test1
   (testing "(x and y) == (and x y)"
@@ -60,7 +60,7 @@
 
 (deftest eq-and-eq-rule-test
   (testing "(a = b and c = d) == (and (= a b) (= c d))"
-    (is (= (infixing (rules eq-rule and-rule) '(a = b and c = d)) '(and (= a b) (= c d))))))
+    (is (= (infixing (merge-rule eq-rule and-rule) '(a = b and c = d)) '(and (= a b) (= c d))))))
 
 (deftest eq-eq-rule-test
   (testing "(a = b = c) == IllegalArgumentException"
@@ -68,27 +68,27 @@
 
 (deftest or-and-or-rule-test
   (testing "(a or b and c or d) == (or a (or (and b c) d))"
-    (is (= (infixing (rules or-rule and-rule) '(a or b and c or d)) '(or a (or (and b c) d))))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a or b and c or d)) '(or a (or (and b c) d))))))
 
 (deftest and-or-or-rule-test
   (testing "(a and b or c or d) == (or (and a b) (or c d))"
-    (is (= (infixing (rules or-rule and-rule) '(a and b or c or d)) '(or (and a b) (or c d))))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a and b or c or d)) '(or (and a b) (or c d))))))
 
 (deftest or-or-and-rule-test
   (testing "(a or b or c and d) == (or a (or b (and c d)))"
-    (is (= (infixing (rules or-rule and-rule) '(a or b or c and d)) '(or a (or b (and c d)))))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a or b or c and d)) '(or a (or b (and c d)))))))
 
 (deftest and-or-and-rule-test
   (testing "(a and b or c and d) == (or (and a b) (and c d))"
-    (is (= (infixing (rules or-rule and-rule) '(a and b or c and d)) '(or (and a b) (and c d))))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a and b or c and d)) '(or (and a b) (and c d))))))
 
 (deftest or-and-and-rule-test
   (testing "(a or b and c and d) == (or a (and b (and c d)))"
-    (is (= (infixing (rules or-rule and-rule) '(a or b and c and d)) '(or a (and b (and c d)))))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a or b and c and d)) '(or a (and b (and c d)))))))
 
 (deftest and-and-or-rule-test
   (testing "(a and b and c or d) == (or (and a (and b c)) d)"
-    (is (= (infixing (rules or-rule and-rule) '(a and b and c or d)) '(or (and a (and b c)) d)))))
+    (is (= (infixing (merge-rule or-rule and-rule) '(a and b and c or d)) '(or (and a (and b c)) d)))))
 
 (deftest space-rule-test
   (testing "(a b $ x y) == IllegalArgumentException"
@@ -96,5 +96,5 @@
 
 (deftest apply-rule-test
   (testing "(f a b $ g x y) == ($ ((f a) b) ((g x) y))"
-    (is (= (infixing (rules apply-rule $-rule) '(f a b $ g x y)) '($ ((f a) b) ((g x) y))))))
+    (is (= (infixing (merge-rule apply-rule $-rule) '(f a b $ g x y)) '($ ((f a) b) ((g x) y))))))
 
