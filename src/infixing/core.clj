@@ -69,4 +69,4 @@
   (Rules. (Rule. priority true false (fn [[_ a b]] (node-map a b))) {}))
 
 (defn rules [& rules]
-  (Rules. (reduce (fn [a b] (or a b)) (map :space-rule rules)) (reduce merge (map :rule-map rules))))
+  (Rules. (reduce (fn [a b] (or b a)) (map :space-rule rules)) (reduce merge (map :rule-map rules))))
